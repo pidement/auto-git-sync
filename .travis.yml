@@ -1,4 +1,8 @@
 language: bash
 
+branches:
+  only:
+    - main
+
 script:
   - bash test.sh
