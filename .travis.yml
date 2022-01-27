@@ -5,4 +5,4 @@ branches:
     - main
 
 script:
-  - bash test.sh
+  - bash test/test.sh

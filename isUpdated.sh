@@ -7,4 +7,10 @@ else
   AUTO_GIT_SYNC_BRANCH="${AUTO_GIT_SYNC_BRANCH}"
 fi
 
+
+if ! git --version > /dev/null 2>&1; then
+    echo "git command not found"
+    exit 1
+fi
+
 echo "AUTO_GIT_SYNC_BRANCH value is $AUTO_GIT_SYNC_BRANCH"
