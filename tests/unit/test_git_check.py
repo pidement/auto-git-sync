@@ -11,7 +11,7 @@ class TestGitCheck(unittest.TestCase):
 
     def setUp(self):
         self.original_path = os.environ["PATH"]
-        self.cmd = ['bash', os.getcwd() + IS_UPDATED_SH]
+        self.cmd = ['sh', os.getcwd() + IS_UPDATED_SH]
 
         process = subprocess.Popen(['pwd'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = process.communicate()
