@@ -1,9 +1,9 @@
-language: bash
-
 branches:
   only:
     - main
 
+language: python
+python:
+  - "3.10.1"
 script:
-  - bash test/test.sh
-
+  - python -m unittest discover

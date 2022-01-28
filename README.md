@@ -22,5 +22,6 @@ if isUpdated.sh; then killServer.sh && update.sh fi;; startServerIfClosed.sh
 killServer.sh && update.sh && startServer.sh
 ```
 
-#test
+# test
+for test you should to have installed python 3
 
