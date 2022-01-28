@@ -23,8 +23,7 @@ class TestEnvironmentCheck(unittest.TestCase):
     def test_defined_env(self):
         os.environ[AUTO_GIT_SYNC_ENV_KEY] = EXAMPLE_ENV_VAR
         out, error = self.exec()
-        self.assertEqual(error, "")
-        self.assertEqual(out, MSG_DEFINED)
+        self.assertEqual(out.split('\n')[0], MSG_DEFINED)
 
     def test_not_defined_env(self):
         out, error = self.exec()

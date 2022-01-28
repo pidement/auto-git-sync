@@ -1,4 +1,3 @@
-from genericpath import exists
 import unittest
 import subprocess
 import os
@@ -18,10 +17,13 @@ class TestGitCheck(unittest.TestCase):
         self.original_path = os.environ["PATH"]
         self.original_cwd = os.getcwd()
         self.cmd = [os.getcwd() + IS_UPDATED_SH]
+        shutil.rmtree(TEST_DIR_PATH, ignore_errors=True)
+        os.mkdir(TEST_DIR_PATH)
 
     def tearDown(self):
         os.environ["PATH"] = self.original_path
         os.chdir(self.original_cwd)
+        shutil.rmtree(TEST_DIR_PATH, ignore_errors=True)
 
     def exec(self, cmd=None):
         if cmd == None:
@@ -37,28 +39,10 @@ class TestGitCheck(unittest.TestCase):
         self.assertEqual(out, "")
 
     def test_no_repo(self):
-        try:
-            os.mkdir(TEST_DIR_PATH)
-        except FileExistsError:
-            pass
         os.chdir(TEST_DIR_PATH)
         out, err = self.exec()
         self.assertEqual(err, "git repo not found")
         self.assertEqual(out, "")
-        os.chdir('/tmp')
-        os.removedirs(TEST_DIR_PATH)
-
-    def test_with_repo(self):
-        try:
-            os.mkdir(TEST_DIR_PATH)
-        except FileExistsError:
-            pass
-        os.chdir(TEST_DIR_PATH)
-        self.exec(['git', 'init'])
-        out, err = self.exec()
-        self.assertEqual(err, "")
-        os.chdir('/tmp')
-        shutil.rmtree(TEST_DIR_PATH)
 
 if __name__ == '__main__':
     unittest.main()

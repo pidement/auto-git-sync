@@ -21,3 +21,41 @@ if ! git status > /dev/null 2>&1; then
 fi
 
 echo "AUTO_GIT_SYNC_BRANCH value is $AUTO_GIT_SYNC_BRANCH"
+
+# Get remote name
+if [[ $(git remote | wc -l) -eq 1 ]]; then
+    REMOTE_NAME=$(git remote)
+else
+    >&2 echo "remote do not defined"
+    exit 1
+fi
+
+# Fetch all remote refs
+git fetch $REMOTE_NAME > /dev/null 2>&1;
+
+# Get remote hash
+if git rev-parse origin/$AUTO_GIT_SYNC_BRANCH > /dev/null 2>&1; then
+    REMOTE_HASH=$(git rev-parse origin/"$AUTO_GIT_SYNC_BRANCH")
+else
+    >&2 echo "branch do not exists on remote"
+    exit 1
+fi
+
+# Update all branches
+git remote update > /dev/null 2>&1;
+
+# Get local hash
+if git rev-parse HEAD > /dev/null 2>&1; then
+    LOCAL_HASH=$(git rev-parse HEAD)
+else
+    exit 1
+fi
+
+# Check if we should update
+if [[ "$LOCAL_HASH" = "$REMOTE_HASH" ]]; then
+    echo "Updated."
+    exit 1
+else
+    echo "Should update."
+    exit
+fi
