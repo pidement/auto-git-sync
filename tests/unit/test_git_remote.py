@@ -72,6 +72,7 @@ class TestGitRemoteCheck(unittest.TestCase):
 
         # set HEAD
         out, err = self.exec(['git', 'checkout', 'aoeu'])
+        print(out)
         self.assertTrue("set up to track remote branch" in out)
         self.assertTrue(err.startswith("Switched to a new branch"))
 
