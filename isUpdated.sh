@@ -55,5 +55,5 @@ if [[ "$LOCAL_HASH" = "$REMOTE_HASH" ]]; then
     exit 1
 else
     echo "Should update."
-    exit
+    exit 0
 fi
