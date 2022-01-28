@@ -9,7 +9,10 @@ EXAMPLE_ENV_VAR = "asoneuths"
 
 class TestGitCheck(unittest.TestCase):
 
+
     def setUp(self):
+        print(os.getcwd())
+        print(os.listdir(os.getcwd()))
         self.original_path = os.environ["PATH"]
         self.cmd = [os.getcwd() + IS_UPDATED_SH]
     
