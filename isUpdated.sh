@@ -41,9 +41,6 @@ else
     exit 1
 fi
 
-# Update all branches
-git remote update > /dev/null 2>&1;
-
 # Check if HEAD it's defined
 if ! git rev-parse HEAD > /dev/null 2>&1;then
     >&2 echo "HEAD do not defined"
