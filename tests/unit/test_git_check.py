@@ -11,16 +11,7 @@ class TestGitCheck(unittest.TestCase):
 
     def setUp(self):
         self.original_path = os.environ["PATH"]
-        self.cmd = ['sh', os.getcwd() + IS_UPDATED_SH]
-
-        process = subprocess.Popen(['pwd'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = process.communicate()
-        print(out.decode('utf-8').rstrip('\n'))
-        print(err.decode('utf-8').rstrip('\n'))
-        process = subprocess.Popen(['ls'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = process.communicate()
-        print(out.decode('utf-8').rstrip('\n'))
-        print(err.decode('utf-8').rstrip('\n'))
+        self.cmd = [os.getcwd() + IS_UPDATED_SH]
 
     def tearDown(self):
         os.environ["PATH"] = self.original_path
