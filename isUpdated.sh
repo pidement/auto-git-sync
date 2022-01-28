@@ -41,14 +41,12 @@ else
     exit 1
 fi
 
-# Update all branches
-git remote update > /dev/null 2>&1;
-
-# Get local hash
-if git rev-parse HEAD > /dev/null 2>&1; then
-    LOCAL_HASH=$(git rev-parse HEAD)
-else
+# Check if HEAD it's defined
+if ! git rev-parse HEAD > /dev/null 2>&1;then
+    >&2 echo "HEAD do not defined"
     exit 1
+else
+    LOCAL_HASH=$(git rev-parse HEAD)
 fi
 
 # Check if we should update

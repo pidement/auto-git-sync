@@ -2,6 +2,7 @@ import unittest
 import subprocess
 import os
 import shutil
+import utils
 
 AUTO_GIT_SYNC_ENV_KEY = "AUTO_GIT_SYNC_BRANCH"
 IS_UPDATED_SH = "/isUpdated.sh"
@@ -12,40 +13,7 @@ TEST_DIR_PATH = '/tmp/test_dir'
 TEST_SERVER_DIR_PATH = '/tmp/test_server_dir'
 TEST_CLIENT_DIR_PATH = '/tmp/test_client_dir'
 
-def execk(cmd):
-    process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = process.communicate()
-    # print(out.decode('utf-8').rstrip('\n'))
-    # print(err.decode('utf-8').rstrip('\n'))
-
-
 class TestGitRemoteCheck(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        original_cwd = os.getcwd()
-
-        os.mkdir(TEST_SERVER_DIR_PATH)
-        os.chdir(TEST_SERVER_DIR_PATH)
-        execk("git init --bare")
-        os.mkdir(TEST_CLIENT_DIR_PATH)
-        os.chdir(TEST_CLIENT_DIR_PATH)
-        execk("git init")
-        execk(f"git remote add origin {TEST_SERVER_DIR_PATH}")
-        execk("git config --local user.name Test")
-        execk("git config --local user.email test@test.com")
-        execk("touch hello.txt")
-        execk("git add hello.txt")
-        execk("git commit -m test")
-        execk("git push -u origin master")
-        execk("git checkout -b aoeuaoeu")
-        execk("git push -u origin aoeuaoeu")
-
-        os.chdir(original_cwd)
-
-    @classmethod
-    def tearDownClass(cls):
-        shutil.rmtree(TEST_SERVER_DIR_PATH)
-        shutil.rmtree(TEST_CLIENT_DIR_PATH)
 
     def setUp(self):
         self.cmd = [os.getcwd() + IS_UPDATED_SH]
@@ -77,11 +45,40 @@ class TestGitRemoteCheck(unittest.TestCase):
         self.assertEqual(err, "branch do not exists on remote")
 
     def test_with_remote_branch(self):
-        os.environ[AUTO_GIT_SYNC_ENV_KEY] = "aoeuaoeu"
-        self.exec(['git', 'init'])
-        self.exec(['git', 'remote', 'add', 'origin', TEST_SERVER_DIR_PATH])
+        s = utils.GitRepo(TEST_SERVER_DIR_PATH)
+        s.init_server_repo()
+
+        c = utils.GitRepo(TEST_CLIENT_DIR_PATH)
+        c.init_client_repo()
+        c.set_remote(s)
+        c.make_branch("aoeu")
+        c.initial_commit()
+        c.push()
+
+        os.chdir(TEST_DIR_PATH)
+        os.environ[AUTO_GIT_SYNC_ENV_KEY] = "aoeu"
+
+        # create our git repo
+        out, err = self.exec(['git', 'init'])
+        self.assertTrue(out.startswith("Initialized empty Git repository in"))
+
+        # adding remote
+        _, err = self.exec(['git', 'remote', 'add', 'origin', TEST_SERVER_DIR_PATH])
+        self.assertEqual(err, "")
+
+        # run isUpdated
+        out, err = self.exec()
+        self.assertEqual(err, "HEAD do not defined")
+
+        # set HEAD
+        out, err = self.exec(['git', 'checkout', 'aoeu'])
+        self.assertTrue("set up to track" in out)
+        self.assertTrue(err.startswith("Switched to a new branch"))
+
+        # run isUpdated
         out, err = self.exec()
         self.assertEqual(err, "")
+        self.assertEqual(out.splitlines()[-1], "Updated.")
 
 if __name__ == '__main__':
     unittest.main()
