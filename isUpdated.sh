@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 if [[ -z "${AUTO_GIT_SYNC_BRANCH}" ]]; then
     >&2 echo "Environment variable AUTO_GIT_SYNC_BRANCH do not defined."
