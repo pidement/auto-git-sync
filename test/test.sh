@@ -6,7 +6,7 @@ export AUTO_GIT_SYNC_BRANCH=
 # check if by default generate error
 if ./isUpdated.sh  > /dev/null 2>&1; then
     echo expected error by default
-    exit
+    exit 1
 else
     echo -n "."
 fi
@@ -17,7 +17,7 @@ export AUTO_GIT_SYNC_BRANCH=test
 # check if get the env variable
 if ! ./isUpdated.sh  > /dev/null 2>&1; then
     echo no error expected
-    exit
+    exit 1
 else
     echo -n "."
 fi
@@ -29,7 +29,7 @@ export PATH=test/bin/
 ## should fail
 if ./isUpdated.sh > /dev/null 2>&1; then
     echo git should fail
-    exit
+    exit 1
 else
     echo -n "."
 fi
@@ -37,7 +37,7 @@ fi
 export PATH=$OLD
 if ! ./isUpdated.sh > /dev/null 2>&1; then
     echo git command should work
-    exit
+    exit 1
 else
     echo -n "."
 fi
