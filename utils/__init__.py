@@ -66,3 +66,7 @@ class GitRepo():
     def push(self):
         os.chdir(self.path)
         execk(f"git push -u origin {self.actual_branch}")
+
+    def pull(self):
+        os.chdir(self.path)
+        execk(f"git pull")
