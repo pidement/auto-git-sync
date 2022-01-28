@@ -6,3 +6,4 @@ branches:
 
 script:
   - bash test/test.sh
+
