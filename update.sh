@@ -1,3 +1,3 @@
 #!/usr/bin/bash
 
-echo "OK"
+git checkout $(git remote)/${AUTO_GIT_SYNC_BRANCH}
